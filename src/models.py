@@ -8,23 +8,43 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    planets_favourites = relationship('Favourites_planets')
+    characters_favourites = relationship('Favourites_characters')
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
+
+class Planets(Base):
+    __tablename__ = 'planets'
     id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+    name = Column(String(250), nullable=False)
+    mass = Column(Float(250), nullable=False)
+    population = Column(Integer(250), nullable=False)
+    planets_favourites = relationship('Favourites_planets')
+
+class Characters(Base):
+    __tablename__ = 'characters'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    eyes_color = Column(String(250), nullable=False)
+    hair_color = Column(String(250), nullable=False)
+    gender = Column(Boolean(), nullable=False)
+    characters_favourites = relationship('Favourites_characters')
+    
+class Favourites_planets(Base):
+    __tablename__ = 'favourites_planets'
+    id = Column(Integer, primary_key=True)
+    favourites_planets = Column(Integer, ForeignKey("planets.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id")) 
+
+class favourites_characters(Base):
+    __tablename__ = 'favourites_characters'
+    id = Column(Integer, primary_key=True)
+    favourites_characters = Column(Integer, ForeignKey("characters.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("user.id")), nullable=False)
+
 
     def to_dict(self):
         return {}
